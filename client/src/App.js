@@ -93,11 +93,11 @@ function App() {
       <Container maxWidth="md" sx={{ mt: 5, mb: 8 }}>
         <Paper elevation={4} sx={{ p: 4, mb: 4, borderRadius: 4, boxShadow: 6, background: 'rgba(255,255,255,0.95)' }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={6}>
               <TextField label="Suche" value={search} onChange={e => setSearch(e.target.value)} fullWidth size="small" variant="outlined" sx={{ bgcolor: 'white', borderRadius: 2 }} />
             </Grid>
-            <Grid item xs={12} sm={3} md={4}>
-              <FormControl fullWidth size="small" variant="outlined" sx={{ bgcolor: 'white', borderRadius: 2 }}>
+            <Grid item xs={12} sm={3} md={3}>
+              <FormControl fullWidth size="small" variant="outlined" sx={{ bgcolor: 'white', borderRadius: 2, minWidth: 140 }}>
                 <InputLabel>Sprache</InputLabel>
                 <Select value={language} label="Sprache" onChange={e => setLanguage(e.target.value)}>
                   <MenuItem value=""><em>Alle</em></MenuItem>
@@ -105,8 +105,8 @@ function App() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={3} md={4}>
-              <FormControl fullWidth size="small" variant="outlined" sx={{ bgcolor: 'white', borderRadius: 2 }}>
+            <Grid item xs={12} sm={3} md={3}>
+              <FormControl fullWidth size="small" variant="outlined" sx={{ bgcolor: 'white', borderRadius: 2, minWidth: 140 }}>
                 <InputLabel>Kategorie</InputLabel>
                 <Select value={category} label="Kategorie" onChange={e => setCategory(e.target.value)}>
                   <MenuItem value=""><em>Alle</em></MenuItem>
