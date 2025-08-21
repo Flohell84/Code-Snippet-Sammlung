@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-  AppBar, Toolbar, Typography, Container, Paper, Box, TextField, Button, Grid, Select, MenuItem, InputLabel, FormControl, IconButton, List, ListItem, ListItemText, ListItemSecondaryAction, Dialog, DialogTitle, DialogContent, DialogActions
+  AppBar, Toolbar, Typography, Container, Paper, Box, TextField, Button, Grid, Select, MenuItem, InputLabel, FormControl, IconButton, List, ListItem, ListItemText, ListItemSecondaryAction, Dialog, DialogTitle, DialogContent, DialogActions, Fab, Tooltip, useTheme
 } from '@mui/material';
 import { Add, Edit, Delete } from '@mui/icons-material';
 
@@ -82,23 +82,22 @@ function App() {
   };
 
   return (
-    <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh' }}>
-      <AppBar position="static" color="primary">
+    <Box sx={{ bgcolor: 'linear-gradient(135deg, #e3f2fd 0%, #f5f5f5 100%)', minHeight: '100vh' }}>
+      <AppBar position="static" sx={{ background: 'linear-gradient(90deg, #1976d2 60%, #42a5f5 100%)', boxShadow: 3 }}>
         <Toolbar>
-          <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h5" component="div" sx={{ flexGrow: 1, fontWeight: 700, letterSpacing: 1 }}>
             Code-Snippet-Sammlung
           </Typography>
-          <Button color="inherit" startIcon={<Add />} onClick={() => handleOpen()}>Neues Snippet</Button>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="md" sx={{ mt: 4 }}>
-        <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+      <Container maxWidth="md" sx={{ mt: 5, mb: 8 }}>
+        <Paper elevation={4} sx={{ p: 4, mb: 4, borderRadius: 4, boxShadow: 6, background: 'rgba(255,255,255,0.95)' }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6} md={4}>
-              <TextField label="Suche" value={search} onChange={e => setSearch(e.target.value)} fullWidth size="small" />
+              <TextField label="Suche" value={search} onChange={e => setSearch(e.target.value)} fullWidth size="small" variant="outlined" sx={{ bgcolor: 'white', borderRadius: 2 }} />
             </Grid>
             <Grid item xs={12} sm={3} md={4}>
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size="small" variant="outlined" sx={{ bgcolor: 'white', borderRadius: 2 }}>
                 <InputLabel>Sprache</InputLabel>
                 <Select value={language} label="Sprache" onChange={e => setLanguage(e.target.value)}>
                   <MenuItem value=""><em>Alle</em></MenuItem>
@@ -107,7 +106,7 @@ function App() {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={3} md={4}>
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size="small" variant="outlined" sx={{ bgcolor: 'white', borderRadius: 2 }}>
                 <InputLabel>Kategorie</InputLabel>
                 <Select value={category} label="Kategorie" onChange={e => setCategory(e.target.value)}>
                   <MenuItem value=""><em>Alle</em></MenuItem>
@@ -117,34 +116,39 @@ function App() {
             </Grid>
           </Grid>
         </Paper>
-        <Paper elevation={1} sx={{ p: 2 }}>
-          <List>
-            {snippets.map(snippet => (
-              <ListItem key={snippet._id} alignItems="flex-start" sx={{ mb: 1, borderRadius: 1, bgcolor: '#fafafa' }}>
-                <ListItemText
-                  primary={<>
-                    <Typography variant="subtitle1" fontWeight="bold">{snippet.title}</Typography>
-                    <Typography variant="caption" color="text.secondary">{snippet.language} | {snippet.category}</Typography>
-                  </>}
-                  secondary={<>
-                    <Typography variant="body2" color="text.secondary">{snippet.description}</Typography>
-                    <Box component="pre" sx={{ bgcolor: '#eee', p: 1, mt: 1, borderRadius: 1, fontSize: '0.95em', overflowX: 'auto' }}>{snippet.code}</Box>
-                  </>}
-                />
-                <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="edit" onClick={() => handleOpen(snippet)}><Edit /></IconButton>
-                  <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(snippet._id)}><Delete /></IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-            {snippets.length === 0 && <Typography variant="body2" color="text.secondary" sx={{ p: 2 }}>Keine Snippets gefunden.</Typography>}
-          </List>
-        </Paper>
+        <Grid container spacing={3}>
+          {snippets.map(snippet => (
+            <Grid item xs={12} sm={6} key={snippet._id}>
+              <Paper elevation={3} sx={{ p: 3, borderRadius: 3, minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: 4, background: 'linear-gradient(135deg, #f8fafc 60%, #e3f2fd 100%)' }}>
+                <Box>
+                  <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 0.5 }}>{snippet.title}</Typography>
+                  <Typography variant="caption" color="text.secondary">{snippet.language} | {snippet.category}</Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>{snippet.description}</Typography>
+                  <Box component="pre" sx={{ bgcolor: '#23272e', color: '#e3f2fd', p: 2, mt: 2, borderRadius: 2, fontSize: '0.98em', overflowX: 'auto', fontFamily: 'Fira Mono, monospace', boxShadow: 1 }}>{snippet.code}</Box>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                  <Tooltip title="Bearbeiten">
+                    <IconButton color="primary" onClick={() => handleOpen(snippet)}><Edit /></IconButton>
+                  </Tooltip>
+                  <Tooltip title="Löschen">
+                    <IconButton color="error" onClick={() => handleDelete(snippet._id)}><Delete /></IconButton>
+                  </Tooltip>
+                </Box>
+              </Paper>
+            </Grid>
+          ))}
+          {snippets.length === 0 && <Grid item xs={12}><Typography variant="body2" color="text.secondary" sx={{ p: 2 }}>Keine Snippets gefunden.</Typography></Grid>}
+        </Grid>
       </Container>
+      <Tooltip title="Neues Snippet" placement="left">
+        <Fab color="primary" aria-label="add" onClick={() => handleOpen()} sx={{ position: 'fixed', bottom: 32, right: 32, boxShadow: 6 }}>
+          <Add />
+        </Fab>
+      </Tooltip>
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>{editId ? 'Snippet bearbeiten' : 'Neues Snippet hinzufügen'}</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 700 }}>{editId ? 'Snippet bearbeiten' : 'Neues Snippet hinzufügen'}</DialogTitle>
         <form onSubmit={handleSubmit}>
-          <DialogContent dividers>
+          <DialogContent dividers sx={{ bgcolor: '#f8fafc' }}>
             <TextField
               label="Titel"
               name="title"
@@ -173,7 +177,8 @@ function App() {
               multiline
               minRows={4}
               required
-              sx={{ mb: 2, fontFamily: 'monospace' }}
+              sx={{ mb: 2, fontFamily: 'Fira Mono, monospace', bgcolor: '#23272e', color: '#e3f2fd', borderRadius: 2 }}
+              InputProps={{ style: { color: '#e3f2fd' } }}
             />
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -206,7 +211,7 @@ function App() {
               </Grid>
             </Grid>
           </DialogContent>
-          <DialogActions>
+          <DialogActions sx={{ bgcolor: '#f8fafc' }}>
             <Button onClick={handleClose}>Abbrechen</Button>
             <Button type="submit" variant="contained">Speichern</Button>
           </DialogActions>
